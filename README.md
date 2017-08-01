@@ -1,4 +1,4 @@
-#MyReads
+# MyReads
 
 MyReads is a book lending app that allows users to select and categorize books they have read, are currently reading, or want to read. Users can also search for books to add to their library.
 
