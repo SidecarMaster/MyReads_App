@@ -20,26 +20,39 @@ class BooksApp extends React.Component {
     )
   }
 
-  shelfChange(target) {
+  shelfChange = (book, target) => {
     // update state at the server
     BooksAPI.update({id: target.id}, target.value).then(e => {
       console.log(e)
     }).catch( () =>
       alert("Error when updating shelf")
     )
+
     // update state locally
     this.setState( prevState => {
+
+      // all books in this scope are of prevState
+      const { books } = prevState
+
       // check if the target is currently in the shelves
-      const isPresent = prevState.books.find( book => (
+      const hasTarget = books.find( book => (
         book.id === target.id
       ))
-      // process the target depending on isPresnet value
-      if (isPresent) {
-        prevState.books.filter(book => book.id===target.id)[0].shelf = target.value
+
+      // process the target depending on hasTarget value
+      if (hasTarget) {
+        // This one is a function, which alters the shelf if the target is currently in the shelves
+        books.filter(book => book.id===target.id)[0].shelf = target.value
       } else {
-        prevState.books.concat(
-          Object.assign({}, target, { shelf: target.value})
-        )
+        // This one returns a state object: {prevState.books: newState.books}
+        return {
+          // Tried push() here. But push() returns the length. While concat returns a new array
+          books: books.concat(
+            // Generate the new book object
+            // The Object.assign() method is used to copy the values of all enumerable own properties from one or more source objects to a target object.
+             Object.assign({}, book, {shelf: target.value})
+           )
+        }
       }
     })
   }
@@ -47,19 +60,16 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
-        <Route path="/searchbook" render={()=> (
-          <SearchBook
-            onShelfChange={ target => {
-              this.shelfChange(target)
-            }}
-          />
-        )}/>
         <Route exact path="/" render={()=>(
           <ListBooks
             books={this.state.books}
-            onShelfChange={ target => {
-              this.shelfChange(target)
-            }}
+            onShelfChange={this.shelfChange}
+          />
+        )}/>
+        <Route path="/searchbook" render={()=> (
+          <SearchBook
+            books={this.state.books}
+            onShelfChange={this.shelfChange}
           />
         )}/>
       </div>
