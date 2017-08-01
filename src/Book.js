@@ -14,7 +14,7 @@ function Book (props) {
   return (
     <div className="book">
       <div className="book-top">
-        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: 'url('+thumbnail+')' }}></div>
+        <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${thumbnail})` }}></div>
         <div className="book-shelf-changer">
           {/* when clicked, you pass two arguments: book that has been passed in Book as props, and the click event */}
           <select value={book.shelf} id={book.id} onChange={(e)=>onShelfChange(book, e.target)}>

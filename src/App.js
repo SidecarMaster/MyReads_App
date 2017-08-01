@@ -15,8 +15,9 @@ class BooksApp extends React.Component {
 
   componentDidMount() {
     BooksAPI.getAll().then(books => {
-      this.setState({ books: books })
-      console.log(this.state.books)
+      // Object literal shorthand: you can remove those duplicate variables names from object properties if the properties have the same name as the variables being assigned to them
+      this.setState({ books })
+      //console.log(this.state.books)
     }).catch( () =>
       alert("Error when fetching data")
     )
@@ -33,7 +34,7 @@ class BooksApp extends React.Component {
     // update state locally
     this.setState( prevState => {
 
-      // all books in this scope are of prevState
+      // Destructuring: books is a property of prevState
       const { books } = prevState
 
       // check if the target is currently in the shelves
@@ -48,12 +49,12 @@ class BooksApp extends React.Component {
       } else {
         // This one returns a state object: {prevState.books: newState.books}
         return {
-          // Tried push() here. But push() returns the length. While concat returns a new array
-          books: books.concat(
+          // Used spread operator from ES6 here. Could also use concat() to combine two arrays
+          books: [
             // Generate the new book object
             // The Object.assign() method is used to copy the values of all enumerable own properties from one or more source objects to a target object.
-             Object.assign({}, book, {shelf: target.value})
-           )
+             ...books, Object.assign({}, book, {shelf: target.value})
+           ]
         }
       }
     })

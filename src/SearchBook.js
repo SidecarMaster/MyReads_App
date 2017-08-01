@@ -35,7 +35,8 @@ class SearchBook extends React.Component {
             searchReturn = _.differenceBy(_.differenceBy(resp, this.props.books, "id"), this.props.books, "title")
             //searchReturn = resp
           }
-          this.setState({searchReturn: searchReturn})
+          // Object literal shorthand: {searchReturn: searchReturn} -> {searchReturn}
+          this.setState({searchReturn})
           // console.log(searchReturn)
         }
       )
