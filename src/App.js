@@ -26,7 +26,7 @@ class BooksApp extends React.Component {
   shelfChange = (book, target) => {
     // update state at the server
     BooksAPI.update({id: target.id}, target.value).then(e => {
-      console.log(e)
+      //console.log(e)
     }).catch( () =>
       alert("Error when updating shelf")
     )

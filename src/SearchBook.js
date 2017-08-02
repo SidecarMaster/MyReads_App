@@ -32,8 +32,8 @@ class SearchBook extends React.Component {
           let searchReturn=[]
           if (Array.isArray(resp)) {
             // this step will eliminate the books that have the same ids or titles with those currently on the book shelves
-            searchReturn = _.differenceBy(_.differenceBy(resp, this.props.books, "id"), this.props.books, "title")
-            //searchReturn = resp
+            // searchReturn = _.differenceBy(_.differenceBy(resp, this.props.books, "id"), this.props.books, "title")
+            searchReturn = resp
           }
           // Object literal shorthand: {searchReturn: searchReturn} -> {searchReturn}
           this.setState({searchReturn})
