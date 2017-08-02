@@ -8,15 +8,11 @@ import BookShelf from './BookShelf'
 function ListBooks (props) {
   const { books, onShelfChange } = props
 
-  const currentlyReading = books.filter( book => book.shelf === "currentlyReading")
-  const wantToRead = books.filter( book => book.shelf === "wantToRead")
-  const read = books.filter( book => book.shelf === "read")
-
   // Don't repeat yourself
   const shelves = [
-    {sectionName:"Currently Reading", books:currentlyReading},
-    {sectionName:"Want to Read", books:wantToRead},
-    {sectionName:"Read", books:read}
+    {sectionName:"Currently Reading", books:books.filter( b => b.shelf === "currentlyReading")},
+    {sectionName:"Want to Read", books:books.filter( b => b.shelf === "wantToRead")},
+    {sectionName:"Read", books:books.filter( b => b.shelf === "read")}
   ]
 
   return (

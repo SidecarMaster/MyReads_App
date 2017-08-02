@@ -9,9 +9,23 @@ import * as BooksAPI from './BooksAPI'
 import Book from './Book'
 
 class SearchBook extends React.Component {
+
   state = {
     query: '',
     searchReturn: []
+  }
+
+  /*
+   * componentWillReceiveProps() is invoked before a mounted component receives new props. If you need to update the state in response to prop changes (for example, to reset it), you may compare this.props and nextProps and perform state transitions using this.setState() in this method.
+   * Note that React may call this method even if the props have not changed, so make sure to compare the current and next values if you only want to handle changes. This may occur when the parent component causes your component to re-render.
+   * React doesn't call componentWillReceiveProps with initial props during mounting. It only calls this method if some of component's props may update. Calling this.setState generally doesn't trigger componentWillReceiveProps.
+   */
+  // This code checks when the props passed in - books - changed, you update the searchReturn with the changed book
+  componentWillReceiveProps =({ books }) => {
+    const clonedResults = _.cloneDeep(this.state.searchReturn)
+    const theObject=_.intersectionBy(books, clonedResults, "id")
+    const theOthers=_.differenceBy(clonedResults, theObject, "id")
+    this.setState({ searchReturn: [...theObject, ...theOthers] })
   }
 
   updateQuery = query => {
@@ -33,9 +47,12 @@ class SearchBook extends React.Component {
           if (Array.isArray(resp)) {
             // this step will eliminate the books that have the same ids or titles with those currently on the book shelves
             // searchReturn = _.differenceBy(_.differenceBy(resp, this.props.books, "id"), this.props.books, "title")
-            searchReturn = resp
+
+            // This code checks when the search results return, if any of the result has intersection with the props - books, then use the book currently in the library to replace the one in the search results
+            const theObject=_.intersectionBy(this.props.books, resp, "id")
+            const theOthers=_.differenceBy(resp, theObject, "id")
+            searchReturn=[...theObject, ...theOthers]
           }
-          // Object literal shorthand: {searchReturn: searchReturn} -> {searchReturn}
           this.setState({searchReturn})
           // console.log(searchReturn)
         }
@@ -44,6 +61,10 @@ class SearchBook extends React.Component {
       this.setState({searchReturn: []})
     }
   }, 300)
+
+  onShelfChangeResp = (book, target) => {
+    this.setState( prevState => prevState.searchReturn.filter(book => book.id===target.id)[0].shelf = target.value)
+  }
 
   render () {
     const { query, searchReturn } = this.state
